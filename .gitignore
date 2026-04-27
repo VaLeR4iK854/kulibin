@@ -1,29 +1,46 @@
-# build output
-dist/
-# generated types
-.astro/
+# build outputs
+**/dist/
+**/.astro/
+**/.next/
+**/.turbo/
 
 # dependencies
-node_modules/
+**/node_modules/
 
 # logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
+*-debug.log*
+*.log
 
 # environment variables
 .env
+.env.local
 .env.production
+**/.env
+**/.env.local
+**/.env.production
 
-# macOS-specific files
+# OS
 .DS_Store
+Thumbs.db
 
-# jetbrains setting folder
+# editor
 .idea/
+.vscode/
 
-# playwright/dev screenshots
+# tooling tmp
 .playwright-mcp/
+.wrangler/
+
+# screenshots from local testing (do not commit)
 *.png
-!public/**/*.png
+*.jpg
+!app/public/**/*.png
+!app/public/**/*.jpg
+!docs/**/*.png
+
+# Payload CMS
+**/payload-types.ts.bak
+**/uploads/
+
+# old Astro project (removed during migration to Next.js + Payload)
+app.old/
