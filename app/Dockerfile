@@ -16,25 +16,22 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Ship full project so `npx payload db:push` / `migrate` works in prod.
+COPY --from=builder --chown=nextjs:nodejs /app/package.json /app/package-lock.json* ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.mjs ./
 
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
-
-# tools target — full source + node_modules, used for one-shot CLI:
-#   docker compose run --rm tools npx payload db:push --force-accept-warning
-#   docker compose run --rm tools npx payload migrate
-FROM builder AS tools
-WORKDIR /app
-ENV NODE_ENV=development
-ENV NEXT_TELEMETRY_DISABLED=1
-CMD ["sh"]
+CMD ["npm", "run", "start"]

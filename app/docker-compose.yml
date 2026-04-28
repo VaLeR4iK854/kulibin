@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: runner
     env_file: .env
     ports:
       - "127.0.0.1:3000:3000"
@@ -15,19 +14,6 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-    networks:
-      - kulibin_default
-
-  tools:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: tools
-    env_file: .env
-    profiles: [tools]
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - kulibin_default
 
