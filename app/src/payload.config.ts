@@ -38,8 +38,9 @@ export default buildConfig({
     try {
       await payload.db.drizzle.execute('SELECT 1 FROM users LIMIT 1' as never)
     } catch (err) {
-      const code = (err as { code?: string }).code
-      if (code !== '42P01') throw err
+      const causeCode = (err as { cause?: { code?: string }; code?: string }).cause?.code
+        ?? (err as { code?: string }).code
+      if (causeCode !== '42P01') throw err
       payload.logger.info('users table missing — running schema push')
       await pushDevSchema(payload.db as never)
       payload.logger.info('schema push complete')
