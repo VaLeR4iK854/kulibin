@@ -9,6 +9,8 @@ import Channels from '@/components/Channels'
 import FinalCTA from '@/components/FinalCTA'
 import type { HeroData, ManifestoData, RoadmapPhase, MetricItem, ChannelItem, VideoCardItem } from '@/types/site'
 
+export const dynamic = 'force-dynamic'
+
 async function getSiteData(): Promise<{
   hero?: HeroData
   metrics?: MetricItem[]

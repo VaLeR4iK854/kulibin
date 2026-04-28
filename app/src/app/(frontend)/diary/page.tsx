@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Дневник — KULIBIN.TV',
   description: 'Хроника домашней нано-фермы. Ежедневные записи, наблюдения, открытия.',

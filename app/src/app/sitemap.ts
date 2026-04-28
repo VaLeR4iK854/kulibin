@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kulibin.tv'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
