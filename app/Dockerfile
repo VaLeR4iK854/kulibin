@@ -29,3 +29,12 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
+
+# tools target — full source + node_modules, used for one-shot CLI:
+#   docker compose run --rm tools npx payload db:push --force-accept-warning
+#   docker compose run --rm tools npx payload migrate
+FROM builder AS tools
+WORKDIR /app
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+CMD ["sh"]
