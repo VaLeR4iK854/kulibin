@@ -1,6 +1,7 @@
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { pushDevSchema } from '@payloadcms/drizzle'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import sharp from 'sharp'
@@ -28,9 +29,20 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
-    push: true,
   }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  onInit: async (payload) => {
+    if (process.env.PAYLOAD_AUTO_SCHEMA === 'false') return
+    try {
+      await payload.db.drizzle.execute('SELECT 1 FROM users LIMIT 1' as never)
+    } catch (err) {
+      const code = (err as { code?: string }).code
+      if (code !== '42P01') throw err
+      payload.logger.info('users table missing — running schema push')
+      await pushDevSchema(payload.db as never)
+      payload.logger.info('schema push complete')
+    }
   },
 })
